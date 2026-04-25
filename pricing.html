@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="Rishikesh Travel Guide: discover spirituality, adventure sports, stays, experiences, and attractions in Uttarakhand."
+/>
+<title>Pricing | Rishikesh Travel Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"
+  rel="stylesheet"
+/>
+<link rel="stylesheet" href="css/styles.css" />
+<link rel="stylesheet" href="css/components.css" />
+<script>
+  (() => {
+    const savedTheme = localStorage.getItem("rtg-theme");
+    if (savedTheme === "dark") {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  })();
+</script>
+
+  </head>
+  <body class="page page--pricing">
+    <header class="site-header" id="top">
+  <div class="container nav-shell">
+    <a class="brand" href="index.html" aria-label="Rishikesh Travel Guide Home">
+      <span class="brand__seal">RT</span>
+      <span class="brand__copy">
+        <strong>Rishikesh</strong>
+        <small>Travel Guide</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" id="nav-toggle" aria-controls="primary-menu" aria-expanded="false" aria-label="Toggle navigation menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="nav-menu" id="primary-menu" data-open="false">
+      <ul class="nav-list">
+        <li><a class="nav-link " href="index.html">Home</a></li>
+        <li><a class="nav-link " href="homestay.html">Book Homestay</a></li>
+        <li><a class="nav-link " href="explore.html">Explore</a></li>
+
+        <li class="nav-item nav-item--dropdown ">
+          <button class="nav-link nav-dropdown-trigger" aria-expanded="false" aria-label="Toggle experience menu">
+            Experience
+          </button>
+          <ul class="nav-dropdown" aria-label="Experience sections">
+            <li><a href="experience.html#into-the-wild">Into the Wild</a></li>
+            <li><a href="experience.html#spirituality">Spirituality</a></li>
+            <li><a href="experience.html#festivals-fairs">Festivals and Fairs</a></li>
+            <li><a href="experience.html#yoga-wellness">Yoga and Wellness</a></li>
+            <li><a href="experience.html#explore-adventures">Explore Adventures</a></li>
+            <li><a href="experience.html#museums">Museums</a></li>
+          </ul>
+        </li>
+
+        <li><a class="nav-link " href="whattodo.html">What To Do</a></li>
+        <li><a class="nav-link is-active" href="pricing.html">Pricing</a></li>
+        <li><a class="nav-link " href="gallery.html">Gallery</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+          <span class="theme-toggle__sun" aria-hidden="true">Sun</span>
+          <span class="theme-toggle__moon" aria-hidden="true">Moon</span>
+        </button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+
+    <main>
+      <section class="page-hero page-hero--pricing">
+        <div class="container page-hero__content" data-reveal>
+          <h1>Pricing</h1>
+          <p>Transparent activity pricing to help you build your itinerary with confidence.</p>
+        </div>
+      </section>
+
+      <section class="section section--tight">
+        <div class="container">
+          <div class="section-header " data-reveal>
+  <p class="section-header__eyebrow">Activity Costs</p>
+  <h2 class="section-header__title">Simple, Transparent Pricing</h2>
+  
+    <p class="section-header__subtitle">Use this table to estimate your trip budget before finalizing your itinerary.</p>
+  
+</div>
+
+
+          <div class="pricing-table-wrap" data-reveal>
+            <table class="pricing-table">
+              <thead>
+                <tr>
+                  <th>Activity</th>
+                  <th>Duration</th>
+                  <th>Inclusions</th>
+                  <th>Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+                  <tr>
+                    <td>River Rafting (16 km)</td>
+                    <td>2.5 - 3 hrs</td>
+                    <td>Guide, helmet, paddle, transport</td>
+                    <td><strong>INR 1,200</strong></td>
+                  </tr>
+                
+                  <tr>
+                    <td>Bungee Jumping</td>
+                    <td>1 hr slot</td>
+                    <td>Safety briefing, harness, certificate</td>
+                    <td><strong>INR 3,500</strong></td>
+                  </tr>
+                
+                  <tr>
+                    <td>Riverside Camping</td>
+                    <td>1 night</td>
+                    <td>Tent stay, dinner, breakfast</td>
+                    <td><strong>INR 2,100</strong></td>
+                  </tr>
+                
+                  <tr>
+                    <td>Sunrise Yoga Session</td>
+                    <td>90 mins</td>
+                    <td>Instructor, yoga mat, herbal tea</td>
+                    <td><strong>INR 850</strong></td>
+                  </tr>
+                
+                  <tr>
+                    <td>Adventure Combo</td>
+                    <td>Full day</td>
+                    <td>Rafting + zipline + lunch</td>
+                    <td><strong>INR 4,900</strong></td>
+                  </tr>
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      <section class="section section--tight">
+        <div class="container">
+          <div class="calendar-section" data-reveal>
+            <div class="calendar-section__top">
+              <h2>Select Activity</h2>
+              <label class="calendar-section__label" for="sportSelect">Adventure Type</label>
+              <select id="sportSelect" class="calendar-section__select">
+                <option value="rafting">River Rafting</option>
+                <option value="bungee">Bungee Jumping</option>
+              </select>
+            </div>
+
+            <p id="calendarMonth" class="calendar-section__month" aria-live="polite"></p>
+            <div id="calendar" class="calendar-grid" role="grid" aria-label="Dynamic pricing calendar"></div>
+
+            <div id="priceDisplay" class="calendar-price-display">
+              <h3 id="selectedDate">Select a date</h3>
+              <p id="priceRange">Choose a date to see pricing.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--tight">
+        <div class="container">
+          <div class="cta-strip" data-reveal>
+            <div>
+              <h3>Need a custom mix of activities?</h3>
+              <p class="card__text">Start with category-wise exploration and build a balanced travel plan.</p>
+            </div>
+            <a class="btn btn--solid" href="experience.html">Browse Experiences</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <h3>Rishikesh Travel Guide</h3>
+      <p>
+        Discover spiritual heritage, Himalayan adventures, and curated local stays with an itinerary designed for modern travelers.
+      </p>
+    </div>
+
+    <div>
+      <h4>Quick Links</h4>
+      <ul class="footer-links">
+        <li><a href="explore.html">Explore</a></li>
+        <li><a href="experience.html">Experience</a></li>
+        <li><a href="homestay.html">Book Homestay</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Travel Tips</h4>
+      <ul class="footer-links">
+        <li>Best season: September to March</li>
+        <li>Nearest airport: Jolly Grant, Dehradun</li>
+        <li>Local travel: Cabs, scooters, short walks</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container footer-bottom__inner">
+      <p>Copyright 2026 Rishikesh Travel Guide. All rights reserved.</p>
+      <a href="#top">Back to top</a>
+    </div>
+  </div>
+</footer>
+
+<script defer src="js/pricing.js"></script>
+<script type="module" src="js/main.js"></script>
+
+  </body>
+</html>
