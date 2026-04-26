@@ -1,215 +1,221 @@
-# 🌍 Rishikesh Travel Guide
+# 🌄 Rishikesh Smart Travel Guide
 
-A modern, frontend-focused tourism web application inspired by Uttarakhand Tourism.
-This project showcases real-world UI/UX design, API integration, and interactive features like maps, weather, and dynamic pricing.
+A modern, AI-inspired travel web app that helps users plan trips to Rishikesh using **dynamic pricing insights, demand heatmaps, and smart recommendations**.
 
 ---
 
 ## 🚀 Features
 
-### 🏠 Core Pages
+### 🧠 Smart Travel Decision Engine
 
-* Home (Hero + Highlights + Weather + Map)
-* Book Homestay
-* Explore
-* Experience (with categories)
-* What To Do
-* Pricing
-* Gallery
+* AI-like pricing logic based on:
+
+  * Weekends vs weekdays
+  * Festivals & peak demand
+  * Weather conditions
+* Generates **fair price ranges** instead of static prices
+
+---
+
+### 🔥 Heatmap Calendar (Core Feature)
+
+* Month-wise interactive calendar
+* Color-coded demand:
+
+  * 🟢 Low (cheaper days)
+  * 🟡 Medium (balanced)
+  * 🔴 High (peak demand)
+* Click any date → view:
+
+  * Price range
+  * Demand score
+  * Weather signal
+  * Recommendations
+
+---
+
+### 📊 Pricing Intelligence
+
+* Dynamic price ranges for:
+
+  * River Rafting
+  * Bungee Jumping
+* Simulated real-world fluctuations
+
+---
+
+### 🧭 Trip Planner Logic
+
+* Suggests best days based on:
+
+  * Budget
+  * Demand
+  * Weather
+* Helps users avoid overpriced days
 
 ---
 
 ### 🌦️ Weather Integration
 
-* Live weather data using **Weatherstack API**
-* Displays:
+* Integrated with Weatherstack API
+* Shows:
 
   * Temperature
-  * Weather description
-  * Humidity
-  * Wind speed
-* Animated weather UI (Skycons)
+  * Conditions
+  * Activity recommendation (e.g., “No rafting in rain”)
 
 ---
 
-### 🗺️ Maps & Navigation (100% Free)
+### 🗺️ Map + Directions (Planned / Optional)
 
-* Built using **Leaflet.js + OpenStreetMap**
+* Location search
+* Travel directions
+* Nearby exploration
+
+---
+
+### 🖼️ Real Image Gallery (Local Assets)
+
+* Uses **your own photos**, not stock images
+* Folder-based structure:
+
+```
+assets/
+  rafting/
+  bungee/
+  camping/
+  lakshman-jhula/
+  home/
+```
+
 * Features:
 
-  * Location search
-  * Marker updates
-  * User location detection
-  * Route directions (via Leaflet Routing Machine)
+  * Lazy loading ⚡
+  * Lightbox (click → fullscreen)
+  * Category filters
+  * Smooth hover animations
 
 ---
 
-### 📅 Dynamic Pricing Calendar (Key Feature 🔥)
+### 🎯 Vendor + Customer Value
 
-* Interactive calendar UI
-* Select activity:
+#### 👤 For Customers:
 
-  * River Rafting
-  * Bungee Jumping
-* Click any date → shows **price range**
-* Designed as a base for:
+* Transparent pricing
+* Best time to visit insights
+* Avoid overpaying
 
-  * Dynamic pricing systems
-  * Travel planning tools
+#### 🏢 For Vendors:
 
----
-
-### 💰 Pricing Table
-
-* Clean UI for activities:
-
-  * Duration
-  * Inclusions
-  * Price
+* Demand visibility
+* Pricing optimization ideas
+* Inventory awareness (simulated)
 
 ---
 
-### 🎨 UI/UX Highlights
+## 🧪 Fake ML Model Logic (Explainable AI)
 
-* Modern dark-themed design
-* Responsive layout (Grid + Flexbox)
-* Smooth animations & hover effects
-* Card-based components
+This project simulates a pricing model using rule-based logic:
+
+```
+Price = Base Price
+      + Weekend Surge
+      + Festival Multiplier
+      + Weather Adjustment
+      + Demand Score
+```
+
+### Factors:
+
+* 📅 Weekend → ↑ price
+* 🎉 Festival → ↑↑ price
+* 🌧️ Bad weather → ↓ or restricted activity
+* 📈 Demand → dynamic adjustment
 
 ---
 
-## 🧱 Tech Stack
-
-### Frontend
+## 🛠️ Tech Stack
 
 * HTML5
-* CSS3 (Flexbox + Grid)
+* CSS3 (Modern UI + Gradients)
 * JavaScript (Vanilla)
-
-### APIs & Libraries
-
 * Weatherstack API
-* Leaflet.js (Maps)
-* OpenStreetMap
-* Leaflet Routing Machine
-* Skycons (weather animation)
+* Local Asset Management
 
 ---
 
 ## 📁 Project Structure
 
 ```
-/project
+Rishikesh Website/
+│
+├── assets/              # All images (real photos)
+├── css/
+├── js/
+│   ├── pricing.js
+│   ├── pricingEngine.js
+│   ├── gallery.js
+│   ├── weatherEngine.js
 │
 ├── index.html
 ├── pricing.html
 ├── gallery.html
-├── explore.html
-├── experience.html
 ├── whattodo.html
-├── homestay.html
-│
-├── /css
-│   ├── styles.css
-│
-├── /js
-│   ├── home.js
-│   ├── config.js
-│
-├── /assets
-│   ├── images/
-│
-└── README.md
+├── explore.html
 ```
 
 ---
 
-## ⚙️ Setup Instructions
+## ⚙️ Setup
 
-### 1️⃣ Clone the Repository
+1. Clone repo / download files
+2. Add your Weatherstack API key in:
 
-```bash
-git clone https://github.com/your-username/rishikesh-travel-guide.git
-cd rishikesh-travel-guide
+```
+config.js
+```
+
+3. Run locally:
+
+```
+Live Server / localhost
 ```
 
 ---
 
-### 2️⃣ Add Weather API Key
+## ⚠️ Notes
 
-Open:
-
-```
-js/config.js
-```
-
-Add your Weatherstack key:
-
-```js
-const CONFIG = {
-  WEATHERSTACK_API_KEY: "YOUR_API_KEY"
-};
-```
+* Pricing data is **AI-simulated (not real-time)**
+* Slot availability is **indicative, not live**
+* Map API can be added using free alternatives
 
 ---
 
-### 3️⃣ Run the Project
+## 🌟 Future Improvements
 
-You can open directly:
-
-```bash
-index.html
-```
-
-OR use a local server:
-
-```bash
-npx live-server
-```
-
----
-
-## ⚠️ Important Notes
-
-* Weatherstack free plan uses **HTTP (not HTTPS)**
-* Maps use **Leaflet (no API key required)**
-* `.env` is not used in static frontend (config.js is used instead)
-
----
-
-## 🧠 Future Enhancements
-
-* 🔐 User authentication
-* 📦 Booking system
-* 💳 Payment integration
-* 📊 Dynamic pricing via backend
-* 📍 Live availability tracking
-* 📱 PWA (mobile app support)
+* Real ML pricing model
+* Vendor dashboard
+* Live booking integration
+* User login + personalization
+* Real-time inventory APIs
 
 ---
 
 ## 💡 Inspiration
 
-Inspired by:
+Built to solve:
 
-* Uttarakhand Tourism Website
-* Modern travel platforms like Airbnb
+> “Tourists don’t know when prices are fair, and vendors struggle with demand visibility.”
 
 ---
 
 ## 👨‍💻 Author
 
-**Naman**
-Frontend Developer | Building real-world projects 🚀
+Naman
+B.Tech | Developer | Building smart travel systems 🚀
 
 ---
 
-## ⭐ Contribute / Feedback
+## ⭐ If you like this project
 
-Feel free to fork, improve, or suggest features!
-
----
-
-## 📜 License
-
-This project is open-source and available under the MIT License.
+Give it a star ⭐ or use it as your portfolio project!
