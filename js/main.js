@@ -1,4 +1,5 @@
 import { initNavbar } from "./navbar.js";
+import { initGallery } from "./gallery.js";
 
 function initNavbarShrink() {
   const header = document.querySelector(".site-header");
@@ -146,6 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initNavbar();
   initNavbarShrink();
   initThemeToggle();
+  initGallery();
   initScrollReveal();
   initSmoothAnchorOffset();
   initImageFallbackLazyLoad();

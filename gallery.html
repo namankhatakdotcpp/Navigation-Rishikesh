@@ -98,48 +98,19 @@
 </div>
 
 
-          <div class="gallery-grid">
-            
-              <figure class="gallery-item gallery__item--tall" data-reveal>
-                <img src="https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="Sunrise Over Ganga" loading="lazy" />
-                <figcaption>Sunrise Over Ganga</figcaption>
-              </figure>
-            
-              <figure class="gallery-item gallery__item--wide" data-reveal>
-                <img src="https://images.unsplash.com/photo-1609766857041-ed402ea8069a?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="Laxman Jhula View" loading="lazy" />
-                <figcaption>Laxman Jhula View</figcaption>
-              </figure>
-            
-              <figure class="gallery-item " data-reveal>
-                <img src="https://images.unsplash.com/photo-1536421469767-80559bb6f5e1?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="Aarti Glow" loading="lazy" />
-                <figcaption>Aarti Glow</figcaption>
-              </figure>
-            
-              <figure class="gallery-item " data-reveal>
-                <img src="https://images.unsplash.com/photo-1499728603263-13726abce5fd?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="Yoga Deck" loading="lazy" />
-                <figcaption>Yoga Deck</figcaption>
-              </figure>
-            
-              <figure class="gallery-item gallery__item--tall" data-reveal>
-                <img src="https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="Forest Trail" loading="lazy" />
-                <figcaption>Forest Trail</figcaption>
-              </figure>
-            
-              <figure class="gallery-item " data-reveal>
-                <img src="https://images.unsplash.com/photo-1571824058769-5f5f5f31f17f?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="River Rapids" loading="lazy" />
-                <figcaption>River Rapids</figcaption>
-              </figure>
-            
-              <figure class="gallery-item gallery__item--wide" data-reveal>
-                <img src="https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="Temple Facade" loading="lazy" />
-                <figcaption>Temple Facade</figcaption>
-              </figure>
-            
-              <figure class="gallery-item " data-reveal>
-                <img src="https://images.unsplash.com/photo-1516589091380-5d8e87df6999?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="Himalayan Horizon" loading="lazy" />
-                <figcaption>Himalayan Horizon</figcaption>
-              </figure>
-            
+          <div class="gallery-toolbar" data-reveal>
+            <div class="filter-bar" data-gallery-filters aria-label="Filter gallery by category">
+              <button class="gallery-filter is-active" type="button" data-filter="all" aria-pressed="true">All</button>
+              <button class="gallery-filter" type="button" data-filter="Lakshman Jhula" aria-pressed="false">Lakshman Jhula</button>
+              <button class="gallery-filter" type="button" data-filter="River Rafting" aria-pressed="false">River Rafting</button>
+              <button class="gallery-filter" type="button" data-filter="Sunrise Point" aria-pressed="false">Sunrise Point</button>
+            </div>
+          </div>
+
+          <div class="gallery-grid" id="galleryContainer" aria-live="polite"></div>
+          <div id="lightbox" class="lightbox hidden" aria-hidden="true">
+            <button id="lightboxClose" class="lightbox__close" type="button" aria-label="Close gallery image view">&times;</button>
+            <img id="lightboxImg" alt="" />
           </div>
         </div>
       </section>

@@ -183,7 +183,7 @@ main {
 
 .hero--home {
   background-image: linear-gradient(135deg, rgba(22, 48, 40, 0.2), rgba(216, 146, 46, 0.22)),
-    url("https://images.unsplash.com/photo-1593693397690-362cb9666fc2?auto=format&fit=crop&w=1800&q=80");
+    url("../assets/home/rishikesh-city-tour.jpg");
 }
 
 .page-hero {
@@ -221,32 +221,33 @@ main {
 
 .page-hero--homestay {
   background-image: linear-gradient(145deg, rgba(14, 39, 31, 0.26), rgba(216, 146, 46, 0.22)),
-    url("https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=1800&q=80");
+    url("../assets/home/rishikesh-city-tour.jpg");
 }
 
 .page-hero--explore {
   background-image: linear-gradient(145deg, rgba(14, 39, 31, 0.22), rgba(216, 146, 46, 0.2)),
-    url("https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=1800&q=80");
+    url("../assets/home/rishikesh-city-tour.jpg");
 }
 
 .page-hero--experience {
   background-image: linear-gradient(145deg, rgba(14, 39, 31, 0.32), rgba(216, 146, 46, 0.22)),
-    url("https://images.unsplash.com/photo-1598958925092-1b4c8fddf3f7?auto=format&fit=crop&w=1800&q=80");
+    url("../assets/lakshman-jhula/IMG_9646.jpeg");
 }
 
 .page-hero--whattodo {
   background-image: linear-gradient(145deg, rgba(14, 39, 31, 0.24), rgba(216, 146, 46, 0.22)),
-    url("https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1800&q=80");
+    url("../assets/rafting/IMG_3E1431084DB0-1.jpeg");
 }
 
 .page-hero--pricing {
   background-image: linear-gradient(145deg, rgba(14, 39, 31, 0.24), rgba(216, 146, 46, 0.22)),
-    url("https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1800&q=80");
+    url("../assets/home/ec1f7fb7-a48b-448a-8f67-6be38a2669f8.JPG");
+  background-position: center 30%;
 }
 
 .page-hero--gallery {
   background-image: linear-gradient(145deg, rgba(14, 39, 31, 0.24), rgba(216, 146, 46, 0.22)),
-    url("https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=1800&q=80");
+    url("../assets/lakshman-jhula/IMG_9480.jpeg");
 }
 
 .grid {

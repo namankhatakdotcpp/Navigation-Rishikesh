@@ -3,9 +3,13 @@ import {
   formatDateKey,
   formatDisplayDate,
   getCalendarMonthLabel,
+  getDefaultAvailableDateKey,
   getDayInsight,
+  getLastAvailableDateKey,
   getMonthInsights,
+  getNearestAvailableDateKey,
   getRecommendationSummary,
+  hasData,
   getSlotSchedule,
   getTrendData,
 } from "./pricingEngine.js";
@@ -113,26 +117,37 @@ function renderCalendar() {
   });
 
   monthInsights.forEach((insight) => {
-    const date = new Date(`${insight.dateKey}T00:00:00`);
     const button = document.createElement("button");
     button.type = "button";
-    button.className = `day-box day-box--${insight.demandBand.color}`;
-    button.dataset.date = insight.dateKey;
-    button.setAttribute("aria-label", `${insight.dateKey}: ${insight.demandBand.label}`);
-    if (state.selectedDate === insight.dateKey) {
-      button.classList.add("is-selected");
+    const date = new Date(`${insight.dateKey}T00:00:00`);
+
+    if (insight.hasData === false) {
+      button.className = "day-box day-box--nodata";
+      button.disabled = true;
+      button.setAttribute("aria-label", `${insight.dateKey}: no data`);
+      button.innerHTML = `
+        <span class="day-box__date">${date.getDate()}</span>
+        <span class="day-box__meta">NO DATA</span>
+      `;
+    } else {
+      button.className = `day-box day-box--${insight.demandBand.color}`;
+      button.dataset.date = insight.dateKey;
+      button.setAttribute("aria-label", `${insight.dateKey}: ${insight.demandBand.label}`);
+      if (state.selectedDate === insight.dateKey) {
+        button.classList.add("is-selected");
+      }
+
+      button.innerHTML = `
+        <span class="day-box__date">${date.getDate()}</span>
+        <span class="day-box__meta">${insight.demandBand.label}</span>
+      `;
+
+      button.addEventListener("click", () => {
+        state.selectedDate = insight.dateKey;
+        renderCalendar();
+        renderSelectedInsight();
+      });
     }
-
-    button.innerHTML = `
-      <span class="day-box__date">${date.getDate()}</span>
-      <span class="day-box__meta">${insight.demandBand.label.split(" ")[0]}</span>
-    `;
-
-    button.addEventListener("click", () => {
-      state.selectedDate = insight.dateKey;
-      renderCalendar();
-      renderSelectedInsight();
-    });
 
     calendar.appendChild(button);
   });
@@ -150,8 +165,8 @@ function renderSlots(activityId, dateKey) {
       (slot) => `
         <div class="slot-card slot-card--${slot.status}">
           <strong>${slot.time}</strong>
-          <span>${slot.label}</span>
-          <small>${slot.status === "sold-out" ? "Waitlist only" : `${slot.seatsLeft} seats left`}</small>
+          <span>${slot.tag}</span>
+          <small>Typical availability pattern</small>
         </div>
       `
     )
@@ -191,6 +206,12 @@ function renderTrendChart() {
   }
 
   const trend = getTrendData(state.activityId, state.selectedDate, 30);
+  if (!trend.labels.length) {
+    setText("trendWindowLabel", "No chart data in this window");
+    destroyChartIfNeeded();
+    return;
+  }
+
   setText("trendWindowLabel", `${trend.labels[0]} - ${trend.labels[trend.labels.length - 1]}`);
   destroyChartIfNeeded();
 
@@ -253,6 +274,15 @@ function renderTrendChart() {
 
 function renderForecastInsights() {
   const summary = getRecommendationSummary(state.activityId, state.selectedDate, 90);
+  if (!summary) {
+    setText("bestDayLabel", "No data");
+    setText("bestDayValue", "Prediction window unavailable");
+    setText("cheapestDayLabel", "No data");
+    setText("cheapestDayValue", "Prediction window unavailable");
+    setText("peakDayLabel", "No data");
+    setText("peakDayValue", "Prediction window unavailable");
+    return;
+  }
 
   setText("bestDayLabel", formatDisplayDate(summary.best.dateKey));
   setText("bestDayValue", `${summary.best.priceRangeLabel} • ${summary.best.weatherStatus.label}`);
@@ -263,6 +293,48 @@ function renderForecastInsights() {
 }
 
 function renderSelectedInsight() {
+  if (!hasData(state.selectedDate)) {
+    setText("selectedDate", formatDisplayDate(state.selectedDate));
+    setText("priceRange", "No data available");
+    setText("priceTag", "Outside simulated dataset");
+    setText("priceReason", "This ML-style simulation only includes full March 2026 data and April 1-2, 2026.");
+    setText("demandScore", "--");
+    setText("demandLabel", "No data");
+    setText("weatherLabel", "--");
+    setText("weatherAdvice", "No prediction available");
+    setText("slotSummary", "No typical timing data");
+    setText("vendorOccupancy", "--");
+    setText("vendorPrice", "--");
+    setText("vendorAction", "Select a supported date to view operator guidance.");
+    setText("vendorRisk", "Simulation inactive");
+    setText("trustScore", "--");
+    setText("verifiedVendors", "No operator data");
+    setText("selectedActivityName", activityCatalog[state.activityId].name);
+
+    const demandBadge = document.getElementById("demandBadge");
+    const weatherBadge = document.getElementById("weatherBadge");
+    const slotList = document.getElementById("slotList");
+
+    if (demandBadge) {
+      demandBadge.className = "status-pill status-pill--nodata";
+      demandBadge.textContent = "No data";
+    }
+
+    if (weatherBadge) {
+      weatherBadge.className = "status-pill status-pill--nodata";
+      weatherBadge.textContent = "No forecast";
+    }
+
+    if (slotList) {
+      slotList.innerHTML = '<div class="slot-card slot-card--nodata"><strong>No timing pattern</strong><span>Typical slot guidance is unavailable for unsupported dates.</span></div>';
+    }
+
+    renderBestActivities(getNearestAvailableDateKey(state.selectedDate));
+    renderTrendChart();
+    renderForecastInsights();
+    return;
+  }
+
   const insight = getDayInsight(state.activityId, state.selectedDate);
   const activity = insight.activity;
 
@@ -274,7 +346,7 @@ function renderSelectedInsight() {
   setText("demandLabel", insight.demandBand.label);
   setText("weatherLabel", `${insight.weather.label}, ${insight.weather.temperature}°C`);
   setText("weatherAdvice", insight.weatherStatus.label);
-  setText("slotSummary", `${insight.availableSlots} of ${insight.totalSlots} slots still open`);
+  setText("slotSummary", "Typical timing patterns");
   setText("vendorOccupancy", `${insight.bookedPercent}% booked`);
   setText("vendorPrice", insight.suggestedVendorPrice);
   setText("vendorAction", insight.vendorSignal.action);
@@ -304,7 +376,7 @@ function renderSelectedInsight() {
 
 function getTodayDateKey() {
   const today = new Date();
-  return formatDateKey(today.getFullYear(), today.getMonth(), today.getDate());
+  return getNearestAvailableDateKey(formatDateKey(today.getFullYear(), today.getMonth(), today.getDate()));
 }
 
 function syncPlannerDate(dateKey) {
@@ -427,9 +499,9 @@ function initPricingExperience() {
   renderPricingTable();
   renderMarketCards();
 
-  const today = new Date();
-  state.currentYear = today.getFullYear();
-  state.currentMonth = today.getMonth();
+  const defaultDate = new Date(`${getDefaultAvailableDateKey()}T00:00:00`);
+  state.currentYear = defaultDate.getFullYear();
+  state.currentMonth = defaultDate.getMonth();
   state.selectedDate = getTodayDateKey();
 
   syncPlannerDate(state.selectedDate);

@@ -169,6 +169,7 @@
                 <span class="legend-pill legend-pill--low">Cheaper days</span>
                 <span class="legend-pill legend-pill--medium">Balanced days</span>
                 <span class="legend-pill legend-pill--high">Peak demand</span>
+                <span class="legend-pill legend-pill--nodata">No data</span>
               </div>
 
               <p id="calendarMonth" class="calendar-section__month" aria-live="polite"></p>
@@ -223,8 +224,8 @@
 
               <div class="slot-panel">
                 <div class="slot-panel__header">
-                  <h4>Available Slots</h4>
-                  <p>Real-time style inventory preview</p>
+                  <h4>Typical Slots</h4>
+                  <p>Representative timing patterns based on simulated demand.</p>
                 </div>
                 <div class="slot-list" id="slotList"></div>
               </div>
@@ -248,6 +249,22 @@
                 </div>
               </div>
             </aside>
+          </div>
+
+          <div class="ml-info" data-reveal>
+            <h3>Smart Pricing Engine</h3>
+            <p>
+              Prices and demand levels are predicted using a simulated machine learning model trained on:
+            </p>
+            <ul>
+              <li>Day-of-week patterns</li>
+              <li>Festival proximity signals</li>
+              <li>Weather impact factors</li>
+              <li>Historical demand trends</li>
+            </ul>
+            <p>
+              This helps users identify the best time to book activities at optimal prices, even when live operator data is not available.
+            </p>
           </div>
         </div>
       </section>
