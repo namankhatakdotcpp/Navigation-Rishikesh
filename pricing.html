@@ -82,18 +82,33 @@
     <main>
       <section class="page-hero page-hero--pricing">
         <div class="container page-hero__content" data-reveal>
-          <h1>Pricing</h1>
-          <p>Transparent activity pricing to help you build your itinerary with confidence.</p>
+          <h1>Smart Travel Decision Engine</h1>
+          <p>Move beyond static pricing with fair-price guidance, demand heatmaps, weather-aware activity recommendations, and a planner that works for travelers and operators.</p>
         </div>
       </section>
 
       <section class="section section--tight">
         <div class="container">
           <div class="section-header " data-reveal>
-  <p class="section-header__eyebrow">Activity Costs</p>
-  <h2 class="section-header__title">Simple, Transparent Pricing</h2>
+  <p class="section-header__eyebrow">Platform Value</p>
+  <h2 class="section-header__title">Built Around Real Travel Friction</h2>
   
-    <p class="section-header__subtitle">Use this table to estimate your trip budget before finalizing your itinerary.</p>
+    <p class="section-header__subtitle">This page now acts like a mini product layer: it reduces price ambiguity for tourists and helps operators manage demand, trust, and empty inventory.</p>
+  
+</div>
+
+
+          <div class="signal-grid" id="marketSnapshot" data-reveal></div>
+        </div>
+      </section>
+
+      <section class="section section--tight">
+        <div class="container">
+          <div class="section-header " data-reveal>
+  <p class="section-header__eyebrow">Base Inventory</p>
+  <h2 class="section-header__title">Anchor Prices By Activity</h2>
+  
+    <p class="section-header__subtitle">These base prices power the pricing engine before demand, weather, and slot load are applied.</p>
   
 </div>
 
@@ -108,67 +123,245 @@
                   <th>Price</th>
                 </tr>
               </thead>
-              <tbody>
-                
-                  <tr>
-                    <td>River Rafting (16 km)</td>
-                    <td>2.5 - 3 hrs</td>
-                    <td>Guide, helmet, paddle, transport</td>
-                    <td><strong>INR 1,200</strong></td>
-                  </tr>
-                
-                  <tr>
-                    <td>Bungee Jumping</td>
-                    <td>1 hr slot</td>
-                    <td>Safety briefing, harness, certificate</td>
-                    <td><strong>INR 3,500</strong></td>
-                  </tr>
-                
-                  <tr>
-                    <td>Riverside Camping</td>
-                    <td>1 night</td>
-                    <td>Tent stay, dinner, breakfast</td>
-                    <td><strong>INR 2,100</strong></td>
-                  </tr>
-                
-                  <tr>
-                    <td>Sunrise Yoga Session</td>
-                    <td>90 mins</td>
-                    <td>Instructor, yoga mat, herbal tea</td>
-                    <td><strong>INR 850</strong></td>
-                  </tr>
-                
-                  <tr>
-                    <td>Adventure Combo</td>
-                    <td>Full day</td>
-                    <td>Rafting + zipline + lunch</td>
-                    <td><strong>INR 4,900</strong></td>
-                  </tr>
-                
-              </tbody>
+              <tbody id="activityPricingRows"></tbody>
             </table>
           </div>
         </div>
       </section>
+
       <section class="section section--tight">
         <div class="container">
-          <div class="calendar-section" data-reveal>
-            <div class="calendar-section__top">
-              <h2>Select Activity</h2>
-              <label class="calendar-section__label" for="sportSelect">Adventure Type</label>
-              <select id="sportSelect" class="calendar-section__select">
-                <option value="rafting">River Rafting</option>
-                <option value="bungee">Bungee Jumping</option>
-              </select>
+          <div class="section-header " data-reveal>
+  <p class="section-header__eyebrow">Pricing Intelligence</p>
+  <h2 class="section-header__title">Demand Heatmap + Fair Price Range</h2>
+  
+    <p class="section-header__subtitle">The engine combines seasonality, weekend pressure, weather impact, and booking load so travelers see fair pricing while operators get demand-sensitive guidance.</p>
+  
+</div>
+
+
+          <div class="decision-layout" data-reveal>
+            <div class="calendar-section">
+              <div class="calendar-section__top">
+                <div>
+                  <h2 id="selectedActivityName">River Rafting</h2>
+                  <p class="calendar-section__subtext">Heatmap legend: green = cheaper, amber = balanced, red = peak demand.</p>
+                </div>
+                <div class="calendar-section__controls">
+                  <div>
+                    <label class="calendar-section__label" for="sportSelect">Activity</label>
+                    <select id="sportSelect" class="calendar-section__select">
+                      <option value="rafting">River Rafting</option>
+                      <option value="bungee">Bungee Jumping</option>
+                      <option value="camping">Riverside Camping</option>
+                      <option value="yoga">Sunrise Yoga</option>
+                      <option value="combo">Adventure Combo</option>
+                    </select>
+                  </div>
+                  <div class="calendar-nav">
+                    <button type="button" class="calendar-nav__button" id="monthPrev" aria-label="Previous month">Prev</button>
+                    <button type="button" class="calendar-nav__button" id="monthNext" aria-label="Next month">Next</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="legend-row">
+                <span class="legend-pill legend-pill--low">Cheaper days</span>
+                <span class="legend-pill legend-pill--medium">Balanced days</span>
+                <span class="legend-pill legend-pill--high">Peak demand</span>
+              </div>
+
+              <p id="calendarMonth" class="calendar-section__month" aria-live="polite"></p>
+              <div class="calendar-weekdays" aria-hidden="true">
+                <span>Sun</span>
+                <span>Mon</span>
+                <span>Tue</span>
+                <span>Wed</span>
+                <span>Thu</span>
+                <span>Fri</span>
+                <span>Sat</span>
+              </div>
+              <div id="calendar" class="calendar-grid" role="grid" aria-label="Demand heatmap calendar"></div>
             </div>
 
-            <p id="calendarMonth" class="calendar-section__month" aria-live="polite"></p>
-            <div id="calendar" class="calendar-grid" role="grid" aria-label="Dynamic pricing calendar"></div>
+            <aside class="insight-panel" id="priceDisplay">
+              <div class="insight-panel__hero">
+                <p class="insight-panel__eyebrow">Selected day</p>
+                <h3 id="selectedDate">Select a date</h3>
+                <p id="priceRange">Choose a date to see pricing.</p>
+                <p id="priceTag" class="price-tag">Pricing tag appears here.</p>
+                <p id="priceReason" class="insight-panel__text">Fair-price logic and travel guidance will appear here.</p>
+              </div>
 
-            <div id="priceDisplay" class="calendar-price-display">
-              <h3 id="selectedDate">Select a date</h3>
-              <p id="priceRange">Choose a date to see pricing.</p>
-            </div>
+              <div class="insight-panel__badges">
+                <span class="status-pill" id="demandBadge">Demand</span>
+                <span class="status-pill" id="weatherBadge">Weather</span>
+              </div>
+
+              <div class="insight-grid">
+                <article class="metric-card">
+                  <p>Demand score</p>
+                  <h4 id="demandScore">--</h4>
+                  <span id="demandLabel">--</span>
+                </article>
+                <article class="metric-card">
+                  <p>Weather signal</p>
+                  <h4 id="weatherLabel">--</h4>
+                  <span id="weatherAdvice">--</span>
+                </article>
+                <article class="metric-card">
+                  <p>Availability</p>
+                  <h4 id="slotSummary">--</h4>
+                  <span>Live slot booking visibility</span>
+                </article>
+                <article class="metric-card">
+                  <p>Trust score</p>
+                  <h4 id="trustScore">--</h4>
+                  <span id="verifiedVendors">--</span>
+                </article>
+              </div>
+
+              <div class="slot-panel">
+                <div class="slot-panel__header">
+                  <h4>Available Slots</h4>
+                  <p>Real-time style inventory preview</p>
+                </div>
+                <div class="slot-list" id="slotList"></div>
+              </div>
+
+              <div class="vendor-panel">
+                <div class="vendor-panel__header">
+                  <h4>Vendor Dashboard Snapshot</h4>
+                  <p>Signals operators can use to reduce empty slots and pricing chaos.</p>
+                </div>
+                <div class="vendor-panel__grid">
+                  <article class="metric-card">
+                    <p>Occupancy</p>
+                    <h4 id="vendorOccupancy">--</h4>
+                    <span id="vendorRisk">--</span>
+                  </article>
+                  <article class="metric-card">
+                    <p>Suggested price</p>
+                    <h4 id="vendorPrice">--</h4>
+                    <span id="vendorAction">--</span>
+                  </article>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--tight">
+        <div class="container">
+          <div class="section-header " data-reveal>
+  <p class="section-header__eyebrow">Predictive Layer</p>
+  <h2 class="section-header__title">3-Month Trend + Recommendation Engine</h2>
+  
+    <p class="section-header__subtitle">A frontend-only simulation engine generates a rolling 90-day pricing window so the UI can surface cheapest dates, surge days, and price movement without live vendor data.</p>
+  
+</div>
+
+
+          <div class="forecast-layout" data-reveal>
+            <article class="trend-panel">
+              <div class="trend-panel__header">
+                <div>
+                  <p class="trend-panel__eyebrow">Price Trend</p>
+                  <h3>Rolling 30-Day Curve</h3>
+                </div>
+                <p id="trendWindowLabel" class="trend-panel__window">Window</p>
+              </div>
+              <canvas id="priceChart" aria-label="30-day price trend chart"></canvas>
+            </article>
+
+            <aside class="forecast-insights">
+              <article class="forecast-card">
+                <p>Best day to visit</p>
+                <h3 id="bestDayLabel">--</h3>
+                <span id="bestDayValue">--</span>
+              </article>
+              <article class="forecast-card">
+                <p>Cheapest day</p>
+                <h3 id="cheapestDayLabel">--</h3>
+                <span id="cheapestDayValue">--</span>
+              </article>
+              <article class="forecast-card">
+                <p>Avoid peak day</p>
+                <h3 id="peakDayLabel">--</h3>
+                <span id="peakDayValue">--</span>
+              </article>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--tight">
+        <div class="container">
+          <div class="section-header " data-reveal>
+  <p class="section-header__eyebrow">Weather Intelligence</p>
+  <h2 class="section-header__title">Best Activities For The Selected Day</h2>
+  
+    <p class="section-header__subtitle">This recommendation layer helps tourists avoid risky bookings and nudges operators toward better-suited inventory.</p>
+  
+</div>
+
+
+          <div class="recommendation-grid" id="weatherRecommendationList" data-reveal></div>
+        </div>
+      </section>
+
+      <section class="section section--tight">
+        <div class="container">
+          <div class="section-header " data-reveal>
+  <p class="section-header__eyebrow">Trip Planner</p>
+  <h2 class="section-header__title">Generate A Budget-Aware Itinerary</h2>
+  
+    <p class="section-header__subtitle">Pick trip length, budget, and interests to assemble a simple multi-day plan instead of guessing how to structure the visit.</p>
+  
+</div>
+
+
+          <div class="planner-shell" data-reveal>
+            <form class="planner-form" id="plannerForm">
+              <div class="planner-form__grid">
+                <label class="planner-field">
+                  <span>Start date</span>
+                  <input type="date" id="plannerStartDate" name="startDate" required />
+                </label>
+                <label class="planner-field">
+                  <span>Trip length</span>
+                  <select name="days">
+                    <option value="2">2 days</option>
+                    <option value="3" selected>3 days</option>
+                    <option value="4">4 days</option>
+                    <option value="5">5 days</option>
+                  </select>
+                </label>
+                <label class="planner-field">
+                  <span>Budget tier</span>
+                  <select name="budget">
+                    <option value="low">Value</option>
+                    <option value="mid" selected>Balanced</option>
+                    <option value="high">Premium</option>
+                  </select>
+                </label>
+              </div>
+
+              <fieldset class="planner-interests">
+                <legend>Interests</legend>
+                <label><input type="checkbox" name="interests" value="adventure" checked /> Adventure</label>
+                <label><input type="checkbox" name="interests" value="spiritual" checked /> Spiritual</label>
+                <label><input type="checkbox" name="interests" value="nature" checked /> Nature</label>
+                <label><input type="checkbox" name="interests" value="wellness" /> Wellness</label>
+                <label><input type="checkbox" name="interests" value="culture" /> Culture</label>
+                <label><input type="checkbox" name="interests" value="family" /> Family</label>
+              </fieldset>
+
+              <button type="submit" class="btn btn--solid">Generate Plan</button>
+            </form>
+
+            <div class="planner-output" id="plannerOutput"></div>
           </div>
         </div>
       </section>
@@ -177,8 +370,8 @@
         <div class="container">
           <div class="cta-strip" data-reveal>
             <div>
-              <h3>Need a custom mix of activities?</h3>
-              <p class="card__text">Start with category-wise exploration and build a balanced travel plan.</p>
+              <h3>Need the rest of the platform next?</h3>
+              <p class="card__text">The next layer can extend this into vendor onboarding, booking checkout, and verified operator profiles.</p>
             </div>
             <a class="btn btn--solid" href="experience.html">Browse Experiences</a>
           </div>
@@ -223,7 +416,8 @@
   </div>
 </footer>
 
-<script defer src="js/pricing.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="module" src="js/pricing.js"></script>
 <script type="module" src="js/main.js"></script>
 
   </body>
