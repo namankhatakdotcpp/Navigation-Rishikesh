@@ -13,6 +13,8 @@ const mapState = {
   routingControl: null,
 };
 
+const REACH_ROAD_URL = "https://www.google.com/maps/dir/?api=1&destination=Rishikesh";
+
 let skyconsInstance = null;
 
 const MOCK_WEATHER = {
@@ -335,9 +337,84 @@ function initMapWidget() {
   setMapStatus("Interactive map loaded. Search a place or get directions from your location.");
 }
 
+function getFlightSuggestion() {
+  const hour = new Date().getHours();
+
+  if (hour < 12) {
+    return "Morning arrivals usually get faster transfers into town.";
+  }
+
+  if (hour < 18) {
+    return "Afternoon arrivals are usually smooth, but keep a buffer for check-in traffic.";
+  }
+
+  return "Evening arrivals can take longer, so pre-booking a taxi is the safer option.";
+}
+
+function renderReachOutput(type) {
+  const output = document.getElementById("reach-output");
+  if (!output) {
+    return;
+  }
+
+  if (type === "road") {
+    output.innerHTML = `
+      <h4>Road Route Opened</h4>
+      <p>Google Maps navigation has been opened for travel to Rishikesh.</p>
+      <p class="reach-output__insight">Tip: Leaving Delhi early usually helps you avoid slower traffic around Haridwar.</p>
+    `;
+    window.open(REACH_ROAD_URL, "_blank", "noopener");
+    return;
+  }
+
+  if (type === "train") {
+    output.innerHTML = `
+      <h4>Nearest Railway Stations</h4>
+      <ul>
+        <li><strong>Rishikesh Railway Station</strong> - around 5 km, about 15 minutes.</li>
+        <li><strong>Haridwar Junction</strong> - around 25 km, about 45 minutes.</li>
+      </ul>
+      <p class="reach-output__insight">Tip: Haridwar usually gives you better train frequency and more reliable connections.</p>
+    `;
+    return;
+  }
+
+  output.innerHTML = `
+    <h4>Smart Travel Insight</h4>
+    <p><strong>Jolly Grant Airport, Dehradun</strong> is the nearest airport to Rishikesh.</p>
+    <p>Distance: about 21 km. Typical transfer time: around 40 minutes.</p>
+    <p>Taxi estimate: roughly INR 600 to INR 1200 depending on timing and luggage.</p>
+    <p class="reach-output__insight">${getFlightSuggestion()}</p>
+  `;
+}
+
+function initReachSection() {
+  const cards = document.querySelectorAll("[data-reach-type]");
+  if (!cards.length) {
+    return;
+  }
+
+  cards.forEach((card) => {
+    card.addEventListener("click", () => {
+      const type = card.getAttribute("data-reach-type");
+      if (!type) {
+        return;
+      }
+
+      cards.forEach((item) => item.classList.toggle("is-active", item === card));
+      renderReachOutput(type);
+    });
+  });
+
+  const defaultCard = cards[0];
+  defaultCard.classList.add("is-active");
+  renderReachOutput(defaultCard.getAttribute("data-reach-type") || "flight");
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initWeatherWidget();
   initMapWidget();
+  initReachSection();
 
   window.searchLocation = searchLocation;
   window.getDirections = getDirections;

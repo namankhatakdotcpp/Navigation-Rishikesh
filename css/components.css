@@ -262,6 +262,110 @@
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
 
+.reach-section {
+  position: relative;
+}
+
+.reach-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-4);
+}
+
+.reach-card {
+  width: 100%;
+  text-align: left;
+  padding: clamp(1.35rem, 2.4vw, 1.7rem);
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in srgb, var(--color-border) 82%, transparent);
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--color-surface) 84%, transparent), color-mix(in srgb, var(--color-surface-alt) 92%, transparent)),
+    radial-gradient(circle at top right, rgba(30, 100, 86, 0.12), transparent 42%);
+  color: var(--color-text);
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.reach-card:hover,
+.reach-card:focus-visible,
+.reach-card.is-active {
+  transform: translateY(-6px);
+  border-color: color-mix(in srgb, var(--color-primary) 42%, var(--color-border));
+  box-shadow: 0 18px 40px rgba(24, 34, 30, 0.12);
+}
+
+.reach-icon {
+  width: 3rem;
+  height: 3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.9rem;
+  border-radius: 0.95rem;
+  background: color-mix(in srgb, var(--color-primary) 14%, var(--color-surface));
+  color: var(--color-primary);
+  font-size: 1.45rem;
+}
+
+.reach-card h3 {
+  margin: 0 0 0.55rem;
+  font-size: 1.15rem;
+}
+
+.reach-card p {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.reach-btn {
+  display: inline-flex;
+  margin-top: 1rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 0.8rem;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 26%, var(--color-border));
+  color: var(--color-primary);
+  font-weight: 700;
+  background: color-mix(in srgb, var(--color-primary) 6%, transparent);
+}
+
+.reach-output {
+  margin-top: var(--space-5);
+  padding: clamp(1.2rem, 2vw, 1.5rem);
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in srgb, var(--color-border) 82%, transparent);
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--color-surface) 88%, transparent), color-mix(in srgb, var(--color-surface-alt) 94%, transparent)),
+    radial-gradient(circle at top left, rgba(216, 146, 46, 0.12), transparent 34%);
+  box-shadow: var(--shadow-soft);
+}
+
+.reach-output h3,
+.reach-output h4 {
+  margin: 0 0 0.55rem;
+}
+
+.reach-output p,
+.reach-output ul {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.reach-output ul {
+  padding-left: 1.15rem;
+}
+
+.reach-output li + li,
+.reach-output p + p,
+.reach-output ul + p {
+  margin-top: 0.45rem;
+}
+
+.reach-output__insight {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
 .card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
