@@ -1,6 +1,8 @@
 import { activityCatalog, vendorSignals } from "./travelData.js";
 import { getActivityWeatherStatus, getWeatherForDate } from "./weatherEngine.js";
 
+const insightCache = {};
+
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
 }
@@ -66,16 +68,19 @@ export function hasData(dateKey) {
   const date = new Date(`${dateKey}T00:00:00`);
   const year = date.getFullYear();
   const month = date.getMonth();
+  const day = date.getDate();
 
   if (year !== 2026) {
     return false;
   }
 
+  // March (month 2) has all data
   if (month === 2) {
     return true;
   }
 
-  if (month === 3 && date.getDate() <= 2) {
+  // April (month 3) has data for day 1-2
+  if (month === 3 && day <= 2) {
     return true;
   }
 
@@ -160,6 +165,11 @@ export function getNearestAvailableDateKey(dateKey) {
 }
 
 export function getDayInsight(activityId, dateKey) {
+  const cacheKey = `${activityId}-${dateKey}`;
+  if (insightCache[cacheKey]) {
+    return insightCache[cacheKey];
+  }
+
   if (!hasData(dateKey)) {
     return null;
   }
@@ -205,7 +215,7 @@ export function getDayInsight(activityId, dateKey) {
           ? "Weather-driven premium"
           : "Regular pricing";
 
-  return {
+  const result = {
     activity,
     dateKey,
     hasData: true,
@@ -228,6 +238,9 @@ export function getDayInsight(activityId, dateKey) {
     verifiedVendors: Math.max(3, Math.round(activity.vendorCount * 0.72)),
     pricingTag,
   };
+  
+  insightCache[cacheKey] = result;
+  return result;
 }
 
 export function getMonthInsights(activityId, year, month) {
@@ -282,32 +295,65 @@ export function getSlotSchedule(activityId, dateKey) {
 }
 
 export function getRollingWindowInsights(activityId, startDateKey, totalDays = 90) {
-  const startDate = new Date(`${startDateKey}T00:00:00`);
-
-  return Array.from({ length: totalDays }, (_, index) => {
-    const currentDate = new Date(startDate);
-    currentDate.setDate(currentDate.getDate() + index);
-    const dateKey = formatDateKey(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-    return hasData(dateKey) ? getDayInsight(activityId, dateKey) : null;
-  }).filter(Boolean);
+  const results = [];
+  
+  // Get all dates that have data and collect their insights
+  // Data range: March 1 - April 2, 2026
+  let dataFound = 0;
+  
+  for (let day = 1; day <= 31; day++) {
+    const dateKey = `2026-03-${String(day).padStart(2, '0')}`;
+    if (hasData(dateKey)) {
+      dataFound++;
+      const insight = getDayInsight(activityId, dateKey);
+      if (insight) {
+        results.push(insight);
+      }
+    }
+  }
+  
+  // Add April 1 and April 2
+  for (let day = 1; day <= 2; day++) {
+    const dateKey = `2026-04-${String(day).padStart(2, '0')}`;
+    if (hasData(dateKey)) {
+      dataFound++;
+      const insight = getDayInsight(activityId, dateKey);
+      if (insight) {
+        results.push(insight);
+      }
+    }
+  }
+  
+  console.log(`getRollingWindowInsights: Found ${dataFound} dates with data, collected ${results.length} insights`);
+  
+  return results;
 }
 
 export function getTrendData(activityId, startDateKey, totalDays = 30) {
   const insights = getRollingWindowInsights(activityId, startDateKey, totalDays);
-  if (!insights.length) {
+  
+  if (!insights || insights.length === 0) {
     return { labels: [], values: [], insights: [] };
   }
 
-  return {
-    labels: insights.map((insight) =>
-      new Intl.DateTimeFormat("en-IN", {
-        day: "numeric",
-        month: "short",
-      }).format(new Date(`${insight.dateKey}T00:00:00`))
-    ),
-    values: insights.map((insight) => insight.fairPrice),
-    insights,
-  };
+  try {
+    const labels = insights.map((insight) => {
+      if (!insight || !insight.dateKey) return "N/A";
+      const parts = insight.dateKey.split('-');
+      if (parts.length < 3) return "N/A";
+      const day = parseInt(parts[2]);
+      const month = parseInt(parts[1]);
+      const months = ['', 'J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+      return `${day}${months[month]}`;
+    });
+    
+    const values = insights.map((insight) => insight.fairPrice || 0);
+    
+    return { labels, values, insights };
+  } catch (error) {
+    console.error("Error in getTrendData:", error);
+    return { labels: [], values: [], insights: [] };
+  }
 }
 
 export function getRecommendationSummary(activityId, startDateKey, totalDays = 90) {

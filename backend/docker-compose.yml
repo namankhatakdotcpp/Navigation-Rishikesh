@@ -1,0 +1,78 @@
+version: "3.9"
+
+# ── Rishikesh Smart Travel Guide — Local Dev Stack ───────────────────────────
+# Usage: docker compose up -d
+# Then run: npm run db:migrate && npm run db:seed
+# API: http://localhost:3001
+# Docs: http://localhost:3001/docs
+# DB:   postgresql://rtg_user:rtg_password@localhost:5432/rishikesh_travel
+
+services:
+  api:
+    build:
+      context: .
+      target: production
+    container_name: rtg_api
+    ports:
+      - "3001:3001"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://rtg_user:rtg_password@postgres:5432/rishikesh_travel
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      # Mount frontend assets so the gallery endpoint resolves image files
+      - ../assets:/app/assets:ro
+    restart: unless-stopped
+    networks:
+      - rtg_network
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: rtg_postgres
+    environment:
+      POSTGRES_USER: rtg_user
+      POSTGRES_PASSWORD: rtg_password
+      POSTGRES_DB: rishikesh_travel
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rtg_user -d rishikesh_travel"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - rtg_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: rtg_redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --maxmemory 128mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - rtg_network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  rtg_network:
+    driver: bridge

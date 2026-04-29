@@ -273,9 +273,9 @@
         <div class="container">
           <div class="section-header " data-reveal>
   <p class="section-header__eyebrow">Predictive Layer</p>
-  <h2 class="section-header__title">3-Month Trend + Recommendation Engine</h2>
+  <h2 class="section-header__title">1 Month Trend + Recommendation Engine</h2>
   
-    <p class="section-header__subtitle">A frontend-only simulation engine generates a rolling 90-day pricing window so the UI can surface cheapest dates, surge days, and price movement without live vendor data.</p>
+    <p class="section-header__subtitle">Our backend pricing intelligence processes historical booking patterns, seasonal demand, and real-time market data to generate a rolling 30-day forecast. This helps identify optimal booking windows, predict surge periods, and show real price movements across your travel dates.</p>
   
 </div>
 
@@ -289,7 +289,9 @@
                 </div>
                 <p id="trendWindowLabel" class="trend-panel__window">Window</p>
               </div>
-              <canvas id="priceChart" aria-label="30-day price trend chart"></canvas>
+              <div style="position: relative; width: 100%; height: 120px; background: rgba(30,100,86,0.05); border-radius: 4px;">
+                <canvas id="priceChart" aria-label="30-day price trend chart"></canvas>
+              </div>
             </article>
 
             <aside class="forecast-insights">

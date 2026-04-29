@@ -1,0 +1,128 @@
+// Prisma schema for Rishikesh Smart Travel Guide
+// Run: npx prisma migrate dev --name init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Activities ───────────────────────────────────────────────────────────────
+
+model Activity {
+  id                  String   @id // "rafting", "bungee", etc.
+  name                String
+  duration            String
+  inclusions          String
+  basePrice           Int
+  baseDemand          Int
+  weekendBoost        Int
+  seasonalPeakMonths  Int[]    // 1-indexed month numbers
+  riskSensitivity     String   // "low" | "medium" | "high"
+  totalSlotsWeekday   Int
+  totalSlotsWeekend   Int
+  vendorCount         Int
+  trustScore          Int
+  interests           String[] // ["adventure", "nature", ...]
+  isActive            Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  vendors      Vendor[]
+  pricingRules PricingRule[]
+  tripLogItems TripLogItem[]
+
+  @@map("activities")
+}
+
+// ─── Vendors ──────────────────────────────────────────────────────────────────
+
+model Vendor {
+  id          String   @id @default(cuid())
+  name        String
+  activityId  String
+  rating      Float    @default(4.0)
+  priceOffset Int      @default(0) // rupees above/below base
+  isVerified  Boolean  @default(false)
+  contactUrl  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  activity Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+
+  @@index([activityId])
+  @@map("vendors")
+}
+
+// ─── Pricing Rules ────────────────────────────────────────────────────────────
+
+model PricingRule {
+  id           String   @id @default(cuid())
+  activityId   String?  // null = applies to all activities
+  ruleType     String   // "festival" | "season" | "weather" | "weekend"
+  name         String
+  startMonth   Int?     // 1-indexed
+  endMonth     Int?
+  specificDays Int[]    // day-of-month for festival rules
+  scoreBonus   Int      @default(0)
+  priceOffset  Int      @default(0) // absolute rupee change
+  priceFactor  Float    @default(0) // multiplicative (0.06 = +6%)
+  priority     Int      @default(0) // higher = evaluated first
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  activity Activity? @relation(fields: [activityId], references: [id], onDelete: SetNull)
+
+  @@index([activityId])
+  @@index([ruleType])
+  @@map("pricing_rules")
+}
+
+// ─── Trip Logs (future analytics) ────────────────────────────────────────────
+
+model TripLog {
+  id         String   @id @default(cuid())
+  sessionId  String   // anonymous session identifier
+  days       Int
+  budgetTier String
+  interests  String[]
+  totalCost  Int
+  createdAt  DateTime @default(now())
+
+  items TripLogItem[]
+
+  @@index([createdAt])
+  @@map("trip_logs")
+}
+
+model TripLogItem {
+  id         String @id @default(cuid())
+  tripLogId  String
+  dayIndex   Int
+  activityId String
+  cost       Int
+
+  tripLog  TripLog  @relation(fields: [tripLogId], references: [id], onDelete: Cascade)
+  activity Activity @relation(fields: [activityId], references: [id], onDelete: Restrict)
+
+  @@index([tripLogId])
+  @@map("trip_log_items")
+}
+
+// ─── Weather Cache Metadata ───────────────────────────────────────────────────
+
+model WeatherCache {
+  id          String   @id @default(cuid())
+  cacheKey    String   @unique
+  data        Json
+  fetchedAt   DateTime @default(now())
+  expiresAt   DateTime
+
+  @@index([cacheKey])
+  @@index([expiresAt])
+  @@map("weather_cache")
+}

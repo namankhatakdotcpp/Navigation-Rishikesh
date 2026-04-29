@@ -22,6 +22,7 @@ const state = {
   currentYear: 0,
   currentMonth: 0,
   chart: null,
+  trendCache: {},
 };
 
 function setText(id, value) {
@@ -205,75 +206,86 @@ function renderTrendChart() {
     return;
   }
 
-  const trend = getTrendData(state.activityId, state.selectedDate, 30);
-  if (!trend.labels.length) {
+  // Get fresh data every time - no caching issues
+  const trend = getTrendData(state.activityId, state.selectedDate);
+
+  if (!trend || !trend.labels || trend.labels.length === 0) {
     setText("trendWindowLabel", "No chart data in this window");
     destroyChartIfNeeded();
     return;
   }
 
-  setText("trendWindowLabel", `${trend.labels[0]} - ${trend.labels[trend.labels.length - 1]}`);
+  // Format readable date range
+  const firstInsight = trend.insights[0];
+  const lastInsight = trend.insights[trend.insights.length - 1];
+  const dateRangeLabel = `${formatDisplayDate(firstInsight.dateKey)} → ${formatDisplayDate(lastInsight.dateKey)}`;
+  setText("trendWindowLabel", dateRangeLabel);
+  
   destroyChartIfNeeded();
 
-  state.chart = new window.Chart(canvas, {
-    type: "line",
-    data: {
-      labels: trend.labels,
-      datasets: [
-        {
-          label: "Fair price trend",
-          data: trend.values,
-          borderColor: "#1e6456",
-          backgroundColor: "rgba(30, 100, 86, 0.14)",
-          fill: true,
-          borderWidth: 2.5,
-          tension: 0.32,
-          pointRadius: 0,
-          pointHoverRadius: 4,
+  try {
+    state.chart = new window.Chart(canvas, {
+      type: "line",
+      data: {
+        labels: trend.labels,
+        datasets: [
+          {
+            label: "Fair price trend",
+            data: trend.values,
+            borderColor: "#1e6456",
+            backgroundColor: "rgba(30, 100, 86, 0.14)",
+            fill: true,
+            borderWidth: 2,
+            tension: 0.3,
+            pointRadius: 0,
+            pointHoverRadius: 0,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+        interaction: { mode: "none" },
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false },
         },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label(context) {
-              return new Intl.NumberFormat("en-IN", {
-                style: "currency",
-                currency: "INR",
-                maximumFractionDigits: 0,
-              }).format(Number(context.raw));
+        scales: {
+          x: {
+            type: "category",
+            grid: { display: false },
+            ticks: { 
+              display: true,
+              maxRotation: 45,
+              minRotation: 0,
+              autoSkip: true,
+              maxTicksLimit: 8,
+              font: { size: 11 },
+            },
+          },
+          y: {
+            beginAtZero: false,
+            grid: { display: true, color: "rgba(0,0,0,0.05)" },
+            ticks: { 
+              display: true,
+              font: { size: 10 },
+              callback: function(value) {
+                return "₹" + value.toLocaleString();
+              }
             },
           },
         },
       },
-      scales: {
-        x: {
-          grid: { display: false },
-          ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 6 },
-        },
-        y: {
-          beginAtZero: false,
-          ticks: {
-            callback(value) {
-              return new Intl.NumberFormat("en-IN", {
-                style: "currency",
-                currency: "INR",
-                maximumFractionDigits: 0,
-              }).format(Number(value));
-            },
-          },
-        },
-      },
-    },
-  });
+    });
+  } catch (error) {
+    console.error("Chart rendering error:", error);
+  }
 }
 
+
 function renderForecastInsights() {
-  const summary = getRecommendationSummary(state.activityId, state.selectedDate, 90);
+  const summary = getRecommendationSummary(state.activityId, state.selectedDate, 20);
   if (!summary) {
     setText("bestDayLabel", "No data");
     setText("bestDayValue", "Prediction window unavailable");
@@ -335,7 +347,20 @@ function renderSelectedInsight() {
     return;
   }
 
-  const insight = getDayInsight(state.activityId, state.selectedDate);
+  const insightCacheKey = `${state.activityId}-${state.selectedDate}`;
+  let insight = state.trendCache[insightCacheKey];
+  
+  if (!insight) {
+    insight = getDayInsight(state.activityId, state.selectedDate);
+    state.trendCache[insightCacheKey] = insight;
+  }
+  
+  if (!insight || !insight.activity) {
+    renderTrendChart();
+    renderForecastInsights();
+    return;
+  }
+  
   const activity = insight.activity;
 
   setText("selectedDate", formatDisplayDate(state.selectedDate));
